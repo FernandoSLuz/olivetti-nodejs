@@ -56,7 +56,7 @@ router.post('/check_status', async (req, res) => {
         let respResult = results[0]
         respResult = {
           ...respResult,
-          isInAConversation: 1,
+          isInAConversation: 0,
           conversationId
         }
 
