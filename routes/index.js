@@ -64,7 +64,7 @@ router.get('/check_user_status/:phone', async (req, res) => {
       resp = results[0]
     }
     else{
-      resp = results[0].conversationId.toString()
+      resp = results[0].conversationId == null ? '' : results[0].conversationId.toString()
     }
 
     res.status(200).send(resp)
