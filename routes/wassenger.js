@@ -1,8 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const rp = require('request-promise');
+const axios = require('axios').default;
+
+// Make Axios Instance
+const axiosInstance = axios.create({
+    baseURL: process.env.URL_ROOT,
+    timeout: 15000,
+    headers: {
+        'Authorization' : `Bearer ${process.env.APIKEY_SELFSCANNER}`
+    }
+})
 
 router.post('/webhook', async (req, res) => {
+
+    console.log('NODE_ENV', process.env.NODE_ENV)
 
     let data = req.body
 
@@ -15,10 +26,13 @@ router.post('/webhook', async (req, res) => {
     
     switch(intentType){
         case 'products':
-        response = await getAllProducts()
-        break
+            
+            response = await getAllProducts()
+            break
+
         default:
-        response = {status: 'not found'}
+
+            response = {status: 'not found'}
     }
 
     res.status(200).send(response)
@@ -54,19 +68,31 @@ router.post('/webhook', async (req, res) => {
 
 const getAllProducts = async () => {
 
-    var options = {
-        uri: `${process.env.URL_ROOT}/products`,
-        headers: {
-        'Authorization' : `Bearer ${process.env.APIKEY_SELFSCANNER}`
-        },
-        resolveWithFullResponse: true
-    }
+    const response = await axiosInstance.get('/products')
 
-    let response = await rp(options)
+    console.log('getAllProducts', response.data)
 
-    return response.body
+    return response.data
 
 }
+
+// const addProduct = async (data) => {
+
+//     let options = {
+//         method: 'POST',
+//         uri: `${process.env.URL_ROOT}/products`,
+//         headers: {
+//             'Authorization' : `Bearer ${process.env.APIKEY_SELFSCANNER}`
+//         },
+//         resolveWithFullResponse: true,
+//         json: true
+//     }
+
+//     let response = await rp(options)
+
+//     return response.body
+
+// }
 
 
 // ### TESTE ###
