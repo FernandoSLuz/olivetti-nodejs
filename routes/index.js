@@ -24,6 +24,56 @@ router.post('/webhook', (req, res) => {
 
 })
 
+router.post('/check_user_status', async (req, res) => {
+
+  const phoneUser = req.body.phone
+  
+  const db = await conn.getDb()
+
+  const sql = `SELECT * FROM tbl_phones WHERE phone = ?`
+
+  db.query(sql, [phoneUser], (error, results, fields) => {
+
+    if(error) throw error
+
+    res.status(200).send(results)
+
+  })
+
+})
+
+router.get('/check_user_status/:phone', async (req, res) => {
+
+  let phoneUser = req.params.phone
+  
+  // Normalize phoneNumber
+  phoneUser = phoneUser.indexOf('+') == -1 ?  `+${phoneUser}` : phoneUser
+  
+  const db = await conn.getDb()
+
+  const sql = `SELECT * FROM tbl_phones WHERE phone = ? AND enabled=1`
+
+  db.query(sql, [phoneUser], (error, results, fields) => {
+
+    if(error) throw error
+
+    console.log(req.query)
+
+    let resp = ''
+    if(req.query.onlyId == undefined){
+      resp = results[0]
+    }
+    else{
+      resp = results[0].conversationId.toString()
+    }
+
+    res.status(200).send(resp)
+    
+  })
+
+})
+
+
 router.get('/intent_user/:intent_type', async (req, res) => {
 
   const intentType = req.params.intent_type.toLowerCase()
