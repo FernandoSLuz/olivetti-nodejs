@@ -1,5 +1,0 @@
-env: flex
-runtime: nodejs
-
-env_variables:
-  BUCKET_NAME: "example-gcs-bucket"

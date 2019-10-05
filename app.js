@@ -4,6 +4,13 @@ let path = require('path');
 let cookieParser = require('cookie-parser');
 let logger = require('morgan');
 let conn = require('./connection')
+let dotenv = require('dotenv')
+
+const environment = process.env.NODE_ENV || 'development';
+
+if(environment == 'development'){
+  dotenv.config()
+}
 
 conn.getDb()
 
