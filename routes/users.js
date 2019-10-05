@@ -16,7 +16,7 @@ router.get('/get_all', async (req, res) => {
   db.query(sql, (error, results, fields) => {
 
     if(error) throw error
-    
+
     res.status(200).send(results)
 
   })
@@ -25,7 +25,10 @@ router.get('/get_all', async (req, res) => {
 
 router.post('/check_status', async (req, res) => {
 
-  const phoneUser = req.body.phone
+  let phoneUser = req.body.phone
+
+  // Normalize phoneNumber
+  phoneUser = phoneUser.indexOf('+') == -1 ?  `+${phoneUser}` : phoneUser
   
   const db = await conn.getDb()
 
