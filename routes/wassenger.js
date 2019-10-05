@@ -13,56 +13,27 @@ const axiosInstance = axios.create({
 
 router.post('/webhook', async (req, res) => {
 
-    console.log('NODE_ENV', process.env.NODE_ENV)
-
-    let data = req.body
-
     console.log('WEBHOOK')
-    console.log(data)
+    console.log(req.body)
 
-    // const intentType = data.intent_type.toLowerCase()
-
-    const {intentType} = data
+    const {intentType, data} = req.body
     
     switch(intentType){
         case 'products':
-            
             response = await getAllProducts()
             break
-
+        case 'add_product':
+            response = await addProduct(data)
+            break
+        case 'get_product_by_id':
+            response = await getProductById(data)
         default:
-
             response = {status: 'not found'}
     }
 
     res.status(200).send(response)
 
-
-    // res.status(200).send({
-    //     status: 'ok',
-    // })
-
 })
-
-
-// ### FUNCOES TESTE ###
-
-// router.get('/intent_user/:intent_type', async (req, res) => {
-
-//     const intentType = req.params.intent_type.toLowerCase()
-//     let response = ''
-
-//     switch(intentType){
-//         case 'products':
-//         response = await getAllProducts()
-//         break
-//         default:
-//         response = {status: 'not found'}
-//     }
-
-//     res.status(200).send(response)
-
-// })
 
 // Recupera lista de produtos
 
@@ -73,6 +44,23 @@ const getAllProducts = async () => {
     console.log('getAllProducts', response.data)
 
     return response.data
+
+}
+
+const addProduct = async (data) => {
+
+    const response = await axiosInstance.post('/products', data)
+
+    console.log('addProduct', response.data)
+
+    return response.data
+
+}
+
+const getProductById = async(data) => {
+
+
+
 
 }
 
@@ -94,14 +82,5 @@ const getAllProducts = async () => {
 
 // }
 
-
-// ### TESTE ###
-
-// (async () => {
-  
-//   const resp = await getAllProducts()
-//   console.log(resp)
-
-// })()
 
 module.exports = router;

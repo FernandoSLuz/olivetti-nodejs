@@ -8,6 +8,7 @@ let dotenv = require('dotenv')
 
 const environment = process.env.NODE_ENV || 'development';
 
+// Load Local Env Vars
 if(environment == 'development'){
   dotenv.config()
 }
@@ -21,7 +22,7 @@ let app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
