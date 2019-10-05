@@ -115,7 +115,7 @@ router.get('/check_status/:phone', async (req, res) => {
         let respResult = results[0]
         respResult = {
           ...respResult,
-          isInAConversation: 1,
+          isInAConversation: 0,
           conversationId
         }
 
