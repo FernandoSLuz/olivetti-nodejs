@@ -7,52 +7,29 @@ const uuidv4 = require('uuid/v4');
 const URL_ROOT = 'https://www.selfscanner.net/wsbackend/users/hackathon'
 const APIKEY_SELFSCANNER = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImhhY2thdGhvbiIsInVzZXJUeXBlIjoicmVndWxhciIsImlhdCI6MTU2OTMzNDk0Mn0.wf6JYu6zt0gCxNPMPRWFae9vvlZrj9eaRAgXJIDP3kM'
 
-/* GET home page. */
-router.get('/node-express', function(req, res, next) {
-  res.render('index', { title: 'Express Teste 123' });
-});
+router.get('/get_all', async (req, res) => {
 
-router.post('/webhook', (req, res) => {
-
-  let data = req.body
-
-  console.log('WEBHOOK')
-  console.log(data)
-
-  res.status(200).send({
-    status: 'ok',
-  })
-
-})
-
-router.post('/check_user_status', async (req, res) => {
-
-  const phoneUser = req.body.phone
-  
   const db = await conn.getDb()
 
-  const sql = `SELECT * FROM tbl_phones WHERE phone = ?`
+  let sql = `SELECT * FROM tbl_users`
 
-  db.query(sql, [phoneUser], (error, results, fields) => {
+  db.query(sql, (error, results, fields) => {
 
     if(error) throw error
-
+    
     res.status(200).send(results)
 
   })
 
 })
 
-router.get('/check_status/:phone', async (req, res) => {
+router.post('/check_status', async (req, res) => {
 
-  let phoneUser = req.params.phone
-  
-  // Normalize phoneNumber
-  phoneUser = phoneUser.indexOf('+') == -1 ?  `+${phoneUser}` : phoneUser
+  const phoneUser = req.body.phone
   
   const db = await conn.getDb()
 
-  let sql = `SELECT * FROM tbl_phones WHERE phone = ? AND enabled=1`
+  let sql = `SELECT * FROM tbl_users WHERE phone = ? AND enabled=1`
 
   db.query(sql, [phoneUser], (error, results, fields) => {
 
@@ -69,7 +46,66 @@ router.get('/check_status/:phone', async (req, res) => {
     if(resp.isInAConversation == 0){
 
       const conversationId = uuidv4()
-      sql = `UPDATE tbl_phones SET isInAConversation=1, conversationId = ? WHERE phone = ?`
+      sql = `UPDATE tbl_users SET isInAConversation=1, conversationId = ? WHERE phone = ?`
+
+      db.query(sql, [conversationId, phoneUser], (error, updateResult) => {
+
+        let respResult = results[0]
+        respResult = {
+          ...respResult,
+          isInAConversation: 1,
+          conversationId
+        }
+
+        if(req.query.onlyId != undefined){
+          respResult = results[0].conversationId == null ? '' : results[0].conversationId.toString()
+        }
+  
+        res.status(200).send(respResult)
+
+      })
+    
+    }
+    else{
+
+      if(req.query.onlyId != undefined){
+        resp = results[0].conversationId == null ? '' : results[0].conversationId.toString()
+      }
+
+      res.status(200).send(resp)
+    }
+    
+  })
+
+})
+
+router.get('/check_status/:phone', async (req, res) => {
+
+  let phoneUser = req.params.phone
+  
+  // Normalize phoneNumber
+  phoneUser = phoneUser.indexOf('+') == -1 ?  `+${phoneUser}` : phoneUser
+  
+  const db = await conn.getDb()
+
+  let sql = `SELECT * FROM tbl_users WHERE phone = ? AND enabled=1`
+
+  db.query(sql, [phoneUser], (error, results, fields) => {
+
+    if(error) throw error
+
+    if(results.length == 0){
+      return res.status(418).send({
+        status: 'Usuario inexistente'
+      })
+    }
+
+    let resp = results[0]
+
+    if(resp.isInAConversation == 0){
+
+      const conversationId = uuidv4()
+      sql = `UPDATE tbl_users SET isInAConversation=1, conversationId = ? WHERE phone = ?`
 
       db.query(sql, [conversationId, phoneUser], (error, updateResult) => {
 

@@ -7,6 +7,7 @@ let conn = require('./connection')
 
 conn.getDb()
 
+let wassengerRouter = require('./routes/wassenger')
 let usersRouter = require('./routes/users');
 
 let app = express();
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/wassenger', wassengerRouter)
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
