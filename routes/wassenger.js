@@ -29,8 +29,26 @@ router.post('/webhook', async (req, res) => {
         case 'products':
             response = await getAllProducts()
             break
-        case 'add_product':
-            response = await addProduct(data)
+        case 'insert product':
+
+            const textArray = queryText.split(',')
+
+            const sku = textArray[0] == undefined ? '' : textArray[0].trim()
+            const name = textArray[1] == undefined ? '' : textArray[1].trim()
+            const price = textArray[2] == undefined ? '' : textArray[2].trim()
+            const tax = textArray[3] == undefined ? '' : textArray[3].trim()
+
+            const postData = {
+                "productSku": sku,
+                "productName": name,
+                "productPrice": price,
+                "productTax": {
+                    "taxPercentageValue": tax
+                }
+            }
+
+            response = await addProduct(postData)
+            
             break
         case 'get_product_by_id':
             response = await getProductById(data)
