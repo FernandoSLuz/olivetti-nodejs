@@ -16,9 +16,16 @@ router.post('/webhook', async (req, res) => {
     console.log('WEBHOOK')
     console.log(req.body)
 
-    const {intentType, data} = req.body
+    const queryText = req.body.queryResult.queryText
+    const displayName = req.body.queryResult.intent.displayName
+
+    console.log('queryText => ', queryText)
+    console.log('displayName => ', displayName)
     
-    switch(intentType){
+    switch(displayName){
+        case 'view products':
+            response = await getAllProducts()
+            break
         case 'products':
             response = await getAllProducts()
             break
