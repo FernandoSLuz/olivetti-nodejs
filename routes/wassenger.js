@@ -66,7 +66,9 @@ const getAllProducts = async () => {
 
     const response = await axiosInstance.get('/products')
 
-    console.log('getAllProducts', response.data)
+    const products = response.data.arr.slice(1).slice(-10)
+
+    console.log('getAllProducts', products)
 
     return response.data
 
