@@ -29,7 +29,7 @@ router.post('/webhook', async (req, res) => {
         case 'products':
             response = await getAllProducts()
             break
-        case 'insert product':
+        case 'insert product - response':
 
             const textArray = queryText.split(',')
 
@@ -48,7 +48,7 @@ router.post('/webhook', async (req, res) => {
             }
 
             response = await addProduct(postData)
-            
+
             break
         case 'get_product_by_id':
             response = await getProductById(data)
