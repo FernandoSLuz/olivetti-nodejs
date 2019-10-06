@@ -117,7 +117,7 @@ router.post('/webhook', async (req, res) => {
         let phoneAuthor = req.body.messages[0].author
         phoneAuthor = phoneAuthor.split('@')[0]
 
-        switch(displayName){
+        switch(queryText){
             case 'view products':
                 response = await getAllProducts()
                 break
