@@ -1,14 +1,14 @@
 # Social Olivetti Web API
 
-#### Web API responsavel por Webhook com serviço do Wassenger (API para WhatsApp) e API REST da aplicação principal.
+#### Web API responsible for Webhook with Wassenger Service (API for WhatsApp) and main application REST API.
 
 - NodeJS
 - Express
 - MariaDb
 - DotEnv
 
-**Para rodar em ambiente de desenvolvimento:**
+**To run in development environment:**
 
-1. npm install ou yarn install
-2. Definir corretamente as variaveis de ambiente do arquivo .env
-3. npm run dev ou yarn run dev
+1. npm install or yarn install
+2. Correctly set the environment variables of the .env file
+3. npm run dev or yarn run dev
