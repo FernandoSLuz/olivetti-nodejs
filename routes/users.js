@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const rp = require('request-promise');
 const conn = require('../connection')
 const uuidv4 = require('uuid/v4');
-
-// const URL_ROOT = 'https://www.selfscanner.net/wsbackend/users/hackathon'
-// const APIKEY_SELFSCANNER = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImhhY2thdGhvbiIsInVzZXJUeXBlIjoicmVndWxhciIsImlhdCI6MTU2OTMzNDk0Mn0.wf6JYu6zt0gCxNPMPRWFae9vvlZrj9eaRAgXJIDP3kM'
 
 router.get('/get_all', async (req, res) => {
 

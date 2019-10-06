@@ -5,12 +5,16 @@ let connInstance = null
 const getDb = () => {
 
     if(connInstance == null){
+
+        const {HOST, DB_USER, DB_PASSWORD, DB_NAME} = process.env
+
+        // console.log(HOST, DB_USER, DB_PASSWORD, DB_NAME)
     
         let connection = mysql.createConnection({
-            host     : '34.67.13.124',
-            user     : 'root',
-            password : 'nNmLMtT1yMHQ',
-            database : 'hacka-olivetti'
+            host     : HOST,
+            user     : DB_USER,
+            password : DB_PASSWORD,
+            database : DB_NAME
         });
         
         connection.connect(() => {
